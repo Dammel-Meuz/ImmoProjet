@@ -372,7 +372,7 @@
             </div>
             
             <!-- Formulaire -->
-            <form id="signupForm" method="POST" action="{{ route('register') }}">
+            <form id="signupForm" method="POST" action="{{ route('client.register.post') }}">
                 @csrf
                 
                 <div class="row">
@@ -382,7 +382,7 @@
                             <input type="text" 
                                    class="form-control" 
                                    id="firstName" 
-                                   name="first_name" 
+                                   name="prenom" 
                                    placeholder="Prénom" 
                                    required>
                             <div class="form-error" id="firstNameError"></div>
@@ -394,7 +394,7 @@
                             <input type="text" 
                                    class="form-control" 
                                    id="lastName" 
-                                   name="last_name" 
+                                   name="nom" 
                                    placeholder="Nom" 
                                    required>
                             <div class="form-error" id="lastNameError"></div>
@@ -446,7 +446,7 @@
                     <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
                     <div class="form-error" id="confirmPasswordError"></div>
                 </div>
-                
+{{--                 
                 <div class="form-group">
                     <i class="fas fa-user-tag form-icon"></i>
                     <select class="form-control" id="userType" name="user_type" required>
@@ -456,7 +456,7 @@
                         <option value="proprietaire">Propriétaire</option>
                     </select>
                     <div class="form-error" id="userTypeError"></div>
-                </div>
+                </div> --}}
                 
                 <div class="checkbox-container">
                     <input type="checkbox" id="terms" name="terms" required>
@@ -504,92 +504,7 @@
                 icon.classList.add('fa-eye');
             }
         }
-        
-        // Validation du formulaire
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Reset des erreurs
-            clearErrors();
-            
-            // Validation des champs
-            let isValid = true;
-            
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const userType = document.getElementById('userType').value;
-            const terms = document.getElementById('terms').checked;
-            
-            // Validation prénom
-            if (firstName.length < 2) {
-                showError('firstName', 'Le prénom doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-            
-            // Validation nom
-            if (lastName.length < 2) {
-                showError('lastName', 'Le nom doit contenir au moins 2 caractères');
-                isValid = false;
-            }
-            
-            // Validation email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showError('email', 'Veuillez saisir une adresse email valide');
-                isValid = false;
-            }
-            
-            // Validation mot de passe
-            if (password.length < 8) {
-                showError('password', 'Le mot de passe doit contenir au moins 8 caractères');
-                isValid = false;
-            }
-            
-            // Validation confirmation mot de passe
-            if (password !== confirmPassword) {
-                showError('confirmPassword', 'Les mots de passe ne correspondent pas');
-                isValid = false;
-            }
-            
-            // Validation type d'utilisateur
-            if (!userType) {
-                showError('userType', 'Veuillez sélectionner votre profil');
-                isValid = false;
-            }
-            
-            // Validation conditions
-            if (!terms) {
-                alert('Vous devez accepter les conditions d\'utilisation');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // Afficher le spinner de chargement
-                const button = document.querySelector('.btn-create');
-                const buttonText = button.querySelector('.btn-text');
-                const spinner = button.querySelector('.loading-spinner');
-                
-                buttonText.style.display = 'none';
-                spinner.style.display = 'inline-block';
-                button.disabled = true;
-                
-                // Simuler l'envoi du formulaire (remplacez par votre logique)
-                setTimeout(() => {
-                    // Ici vous pouvez soumettre le formulaire réellement
-                    // this.submit();
-                    
-                    // Pour la démo, on reset le bouton après 2 secondes
-                    buttonText.style.display = 'inline';
-                    spinner.style.display = 'none';
-                    button.disabled = false;
-                    
-                    alert('Compte créé avec succès !');
-                }, 2000);
-            }
-        });
+    
         
         function showError(fieldId, message) {
             const field = document.getElementById(fieldId);

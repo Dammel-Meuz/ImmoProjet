@@ -232,7 +232,7 @@
                 <select 
                     class="form-select @error('property_id') is-invalid @enderror" 
                     id="property_id" 
-                    name="property_id" 
+                    name="propertie_id" 
                     required
                 >
                     <option value="">-- Sélectionner une propriété --</option>
@@ -240,7 +240,7 @@
                         <option value="{{ $property->id }}">{{ $property->title }}</option>
                     @endforeach
                 </select>
-                @error('property_id')
+                @error('propertie_id')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>

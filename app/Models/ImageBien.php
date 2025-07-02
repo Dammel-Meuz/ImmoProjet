@@ -10,7 +10,7 @@ class ImageBien extends Model
     use HasFactory;
     
     protected $fillable = [
-        'property_id',
+        'propertie_id',
         'image_path',
         'is_main',
     ];

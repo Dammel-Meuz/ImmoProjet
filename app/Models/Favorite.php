@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Favorite extends Model
 {
     use HasFactory;
-       protected $fillable = ['user_id', 'property_id'];
+       protected $fillable = ['user_id', 'propertie_id'];
 
     public function user()
     {

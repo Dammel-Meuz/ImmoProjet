@@ -60,7 +60,8 @@
         </div><!--//container-fluid-->
     </div><!--//app-header-inner-->
     <!--//app-sidepanel-->
-     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-+0n0xVW2eSR5O4v6j8z9f1b6d7rSb8dYH7z3P9g7kA" crossorigin="anonymous"></script> --}}
     </body>
 
 </html>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ImmoExpert - Votre Partenaire Immobilier</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -36,30 +37,37 @@
                     
                 </ul>
             </div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-        
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('client.register') }}">Inscription</a>
+           <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+        @auth
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ Auth::user()->name }}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li>
+                        <a class="dropdown-item" href="{{route('client.dashboard')}}">Dashboard</a>
                     </li>
-                    @auth
-                    <li class="nav-item">
-                        
-                             <form method="POST" action="{{ route('logout') }}">
+                    <li>
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
-                               <button type="submit" class="nav-link" > Deconnexion</button>
-                           
-                             </form>
-                           
+                            <button type="submit" class="dropdown-item">Déconnexion</button>
+                        </form>
                     </li>
-                    @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('client.login') }}">Connexion</a>
-                    </li>   
-                    @endauth
                 </ul>
-            </div>
+            </li>
+        @else
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('client.register') }}">Inscription</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('client.login') }}">Connexion</a>
+            </li>
+        @endauth
+    </ul>
+</div>
+
         </div>
     </nav>
 <div class="main-content">
@@ -80,9 +88,9 @@
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>Contact</h5>
-                    <p><i class="fas fa-map-marker-alt me-2"></i>123 Avenue des Champs, 75008 Paris</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>Guédiawaye, Dakar</p>
                     <p><i class="fas fa-phone me-2"></i>+33 1 23 45 67 89</p>
-                    <p><i class="fas fa-envelope me-2"></i>contact@immoexpert.fr</p>
+                    <p><i class="fas fa-envelope me-2"></i>contact@tawfékhImmo.fr</p>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>Horaires d'ouverture</h5>

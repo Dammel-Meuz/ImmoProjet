@@ -11,26 +11,48 @@ class FavoriteController extends Controller
      /**
      * Ajouter une propriété aux favoris.
      */
-    public function store(Request $request, $propertyId)
+    public function store(Request $request, $id)
     {
         $user = Auth::user();
 
         $exists = Favorite::where('user_id', $user->id)
-                          ->where('property_id', $propertyId)
+                          ->where('propertie_id', $id)
                           ->exists();
 
         if ($exists) {
-            return redirect()->back()->with('message', 'Déjà ajouté aux favoris.');
+            $exists ->delete(); // Remove the favorite if it already exists
+            return response()->json(['success' => true, 'message' => 'Propriété retirée des favoris.']);
         }
-
+        
         Favorite::create([
             'user_id' => $user->id,
-            'property_id' => $propertyId,
+            'propertie_id' => $id,
         ]);
-
-        return redirect()->back()->with('success', 'Propriété ajoutée aux favoris.');
+         return response()->json(['success' => true]);
+        // return redirect()->back()->with('success', 'Propriété ajoutée aux favoris.');
     }
 
+    public function toggle(Request $request)
+{
+    $request->validate([
+        'propertie_id' => 'required|exists:properties,id'
+    ]);
+
+    $favorite = Favorite::where('user_id', Auth::id())
+                        ->where('propertie_id', $request->propertie_id)
+                        ->first();
+
+    if ($favorite) {
+        $favorite->delete();
+        return response()->json(['status' => 'removed']);
+    } else {
+        Favorite::create([
+            'user_id' => Auth::id(),
+            'propertie_id' => $request->propertie_id
+        ]);
+        return response()->json(['status' => 'added']);
+    }
+}
     /**
      * Supprimer un favori.
      */

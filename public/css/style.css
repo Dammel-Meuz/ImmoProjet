@@ -173,6 +173,16 @@
             border-radius: 25px;
             font-weight: bold;
         }
+         .property-price-loaction {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgb(27, 195, 12);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
 
         .footer {
             background: var(--primary-color);

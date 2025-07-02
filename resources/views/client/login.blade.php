@@ -331,6 +331,7 @@
     </style>
 </head>
 <body>
+ 
     <div class="login-container">
         <!-- Section Image -->
         <div class="image-section">
@@ -379,7 +380,7 @@
             </div>
             
             <!-- Formulaire -->
-            <form id="loginForm" method="POST" action="{{ route('login') }}">
+            <form id="loginForm" method="POST" action="{{ route('client.login.post') }}">
                 @csrf
                 
                 <div class="form-group">
@@ -423,132 +424,13 @@
             </form>
             
             <div class="signup-link">
-                <p>Vous n'avez pas de compte ? <a href="{{ route('register') }}">S'inscrire</a></p>
+                <p>Vous n'avez pas de compte ? <a href="{{ route('client.register') }}">S'inscrire</a></p>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Fonction pour basculer la visibilité du mot de passe
-        function togglePassword(fieldId) {
-            const field = document.getElementById(fieldId);
-            const icon = field.nextElementSibling;
-            
-            if (field.type === 'password') {
-                field.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                field.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-        
-        // Validation du formulaire
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Reset des erreurs
-            clearErrors();
-            
-            // Validation des champs
-            let isValid = true;
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            // Validation email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showError('email', 'Veuillez saisir une adresse email valide');
-                isValid = false;
-            }
-            
-            // Validation mot de passe
-            if (password.length < 8) {
-                showError('password', 'Le mot de passe doit contenir au moins 8 caractères');
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // Afficher le spinner de chargement
-                const button = document.querySelector('.btn-login');
-                const buttonText = button.querySelector('.btn-text');
-                const spinner = button.querySelector('.loading-spinner');
-                
-                buttonText.style.display = 'none';
-                spinner.style.display = 'inline-block';
-                button.disabled = true;
-                
-                // Simuler l'envoi du formulaire (remplacez par votre logique)
-                setTimeout(() => {
-                    // Ici vous pouvez soumettre le formulaire réellement
-                    // this.submit();
-                    
-                    // Pour la démo, on reset le bouton après 2 secondes
-                    buttonText.style.display = 'inline';
-                    spinner.style.display = 'none';
-                    button.disabled = false;
-                    
-                    // Redirection après connexion réussie
-                    window.location.href = "{{ route('dashboard') }}";
-                }, 2000);
-            }
-        });
-        
-        function showError(fieldId, message) {
-            const field = document.getElementById(fieldId);
-            const errorDiv = document.getElementById(fieldId + 'Error');
-            
-            field.classList.add('error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-        
-        function clearErrors() {
-            const errorDivs = document.querySelectorAll('.form-error');
-            const fields = document.querySelectorAll('.form-control');
-            
-            errorDivs.forEach(div => {
-                div.style.display = 'none';
-                div.textContent = '';
-            });
-            
-            fields.forEach(field => {
-                field.classList.remove('error', 'success');
-            });
-        }
-        
-        // Validation en temps réel
-        document.querySelectorAll('.form-control').forEach(field => {
-            field.addEventListener('input', function() {
-                if (this.classList.contains('error')) {
-                    this.classList.remove('error');
-                    const errorDiv = document.getElementById(this.id + 'Error');
-                    if (errorDiv) {
-                        errorDiv.style.display = 'none';
-                    }
-                }
-                
-                // Ajouter la classe success si le champ est valide
-                if (this.value.trim() !== '') {
-                    this.classList.add('success');
-                } else {
-                    this.classList.remove('success');
-                }
-            });
-        });
 
-        // Afficher les erreurs de connexion s'il y en a
-        @if($errors->any())
-            @foreach($errors->all() as $error)
-                alert('{{ $error }}');
-            @endforeach
-        @endif
-    </script>
 </body>
 </html>

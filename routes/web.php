@@ -7,6 +7,7 @@ use App\Models\Propertie;
 use App\Models\TypeProperty;
 use App\Models\ProgramerVisite;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CiteController;
 use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\ContactController;
@@ -28,13 +29,17 @@ use App\Http\Controllers\ProgramerVisiteController;
 |
 */
 Route::get('/',[AccueilController::class,'index'])->name('accueil.index');
+Route::get('/biensList', [AccueilController::class, 'properties'])->name('accueil.biens');
+Route::get('/biens/{id}', [AccueilController::class, 'show'])->name('accueil.bien.show');
+
+
 // Route::get('/', function () {
 //     return view('Accueil.accueil' , compact('nom'));
 // })->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard12');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');;,
 
 // Route::middleware(['auth', 'role:admin'])->group(function () {
 //     Route::get('/dashboard', function () {
@@ -71,11 +76,11 @@ Route::resource('programer_visites', ProgramerVisiteController::class);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/favoris', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/favoris', [FavoriteController::class, 'store'])->name('favorites.store');
     Route::delete('/favoris/{id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::post('/favoris/{id}', [FavoriteController::class, 'store'])->name('favorites.store');
 });
 
-
+Route::post('/favorites/toggle', [FavoriteController::class, 'toggle'])->middleware('auth');
 
 Route::middleware(['auth', 'role:agent'])->group(function () {
     Route::get('/agent', function () {
@@ -95,7 +100,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 // client routes
-Route::view('/client/register', 'client.register')->name('client.register');
-Route::view('/client/login', 'client.login')->name('client.login');
+
+Route::prefix('client')->group(function () {
+
+        Route::view('/register', 'client.register')->name('client.register');
+        Route::view('/login', 'client.login')->name('client.login');
+        
+        Route::post('/register', [AuthController::class, 'register'])->name('client.register.post');
+
+        Route::post('/login', [AuthController::class, 'login'])->name('client.login.post');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('client.logout');
+        Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('client.dashboard')->middleware('auth');
+});
+
 
 require __DIR__.'/auth.php';

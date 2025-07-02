@@ -5,9 +5,9 @@
                     <div class="hero-content">
                         <h1 class="hero-title">Trouvez la Maison de Vos Rêves</h1>
                         <p class="hero-subtitle">Avec plus de 15 ans d'expérience, nous vous accompagnons dans tous vos projets immobiliers</p>
-                        <button class="btn btn-primary-custom">
+                        <a href="{{ route('accueil.biens') }}" class="btn btn-primary-custom">
                             <i class="fas fa-search me-2"></i>Découvrir nos biens
-                        </button>
+                        </a>
                     </div>
                     
                     <div class="search-form">

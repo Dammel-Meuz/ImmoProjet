@@ -17,8 +17,9 @@ class Propertie extends Model
         'prix_m2',
         'surface_habitable',
         'surface_terrain',
-        'chambers',
-        'salles_bains',
+        'nb_chambres',
+        'nb_salles_bain',
+        'nb_etages',
         'pieces',
         'etage',
         'annee_construction',
@@ -51,5 +52,10 @@ class Propertie extends Model
 {
     return $this->hasMany(Favorite::class);
 }
+    public function images()
+    {
+        return $this->hasMany(ImageBien::class);
+    }
+
 
 }

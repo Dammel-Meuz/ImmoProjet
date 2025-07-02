@@ -257,7 +257,39 @@
                     @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
+    
+        
+        <div class="form-floating">
+                    <input type="number" name="nb_chambres" id="nb_chambres" class="form-control @error('nb_chambres') is-invalid @enderror"
+               placeholder="Nombre de chambres" value="{{ old('nb_chambres', $property->nb_chambres ?? '') }}" required>
+                    <label for="address"><i class="fas fa-bed text-primary me-2"></i>Nombre de chambres  *</label>
+                    @error('address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+       
+          
+        @error('nb_chambres') 
+            <div class="invalid-feedback d-block">{{ $message }}</div> 
+        @enderror
+  
+</div>
+         <div class="col-md-3">
+    
+        
+        <div class="form-floating">
+                    <input type="number" name="nb_salles_bain" id="nb_salles_bain" class="form-control @error('nb_salles_bain') is-invalid @enderror"
+               placeholder="Nombre de salles de bain" value="{{ old('nb_salles_bain', $property->nb_salles_bain ?? '') }}" required>
+                    <label for="address"><i class="fas fa-bath text-primary me-2"></i>Nombre de salles de bain  *</label>
+                    @error('nb_salles_bain') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+       
+          
+        @error('nb_chambres') 
+            <div class="invalid-feedback d-block">{{ $message }}</div> 
+        @enderror
+  
+</div>
+         <div class="col-md-6">
     <div class="form-check form-switch">
         <input type="checkbox" 
                name="en_vedette" 
@@ -269,6 +301,24 @@
            
             <i class="fas fa-star text-primary me-2"></i>
             <span>Mettre en vedette</span>
+        </label>
+        @error('en_vedette') 
+            <div class="invalid-feedback d-block">{{ $message }}</div> 
+        @enderror
+    </div>
+</div>
+  <div class="col-md-6">
+    <div class="form-check form-switch">
+        <input type="checkbox" 
+               name="is_active" 
+               id="is_active" 
+               class="form-check-input @error('is_active') is-invalid @enderror"
+               value="1"
+               {{ old('is_active', $property->en_vedette ?? false) ? 'checked' : '' }}>
+        <label class="form-check-label d-flex align-items-center" for="en_vedette">
+           
+            <i class="fas fa-check text-primary me-2"></i>
+            <span>Publier</span>
         </label>
         @error('en_vedette') 
             <div class="invalid-feedback d-block">{{ $message }}</div> 
@@ -331,7 +381,22 @@
             </div>
         </div>
     </div>
-
+<div class="form-section mt-4">
+        <h5 class="form-section-title">
+            <i class="fas fa-note-sticky me-2"></i>Description
+        </h5>
+        <div class="row g-4">
+            <!-- description -->
+            <div class="col-md-12">
+                <div class="form-floating">
+                    <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                        placeholder="Description" rows="4">{{ old('description', $property->description ?? '') }}</textarea>
+                    <label for="description"><i class="fas fa-note-sticky text-primary me-2"></i>Description *</label>
+                    @error('type_properties_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                </div>
+            </div>
+        </div>
+</div>    
     <!-- Boutons -->
     <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
         <div class="text-muted small">

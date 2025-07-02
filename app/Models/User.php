@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // Assuming you have a role field to differentiate user roles
+        'phone',
     ];
 
     /**
@@ -53,5 +54,6 @@ public function favoriteProperties()
     return $this->belongsToMany(Propertie::class, 'favorites');
 
 }
+
 
 }

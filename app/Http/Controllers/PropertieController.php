@@ -30,6 +30,9 @@ class PropertieController extends Controller
             'transaction_type' => 'required|in:vente,location',
             'prix' => 'required|numeric',
             'surface_habitable' => 'required|numeric',
+            'nb_chambres' => 'required|integer|min:0',
+            'nb_salles_bain' => 'required|integer|min:0',
+            'description' => 'nullable|string',
             'address' => 'required|string',
             'type_properties_id' => 'required|exists:type_properties,id',
             'user_id' => 'required|exists:users,id',
@@ -39,6 +42,9 @@ class PropertieController extends Controller
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
+        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+        $validated['en_vedette'] = $request->has('en_vedette') ? 1 : 0;
+        
         Propertie::create($validated);
 
         return redirect()->route('properties.index')->with('success', 'Propriété créée avec succès.');
@@ -64,6 +70,9 @@ class PropertieController extends Controller
             'transaction_type' => 'required|in:vente,location',
             'prix' => 'required|numeric',
             'surface_habitable' => 'required|numeric',
+            'nb_chambres' => 'required|integer|min:0',
+            'nb_salles_bain' => 'required|integer|min:0',
+            'description' => 'nullable|string',
             'address' => 'required|string',
             'type_properties_id' => 'required|exists:type_properties,id',
             'user_id' => 'required|exists:users,id',

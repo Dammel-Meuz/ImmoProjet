@@ -18,6 +18,10 @@ return new class extends Migration
             $table->enum('transaction_type', ['vente', 'location']);
             $table->decimal('prix', 12, 2);
             $table->decimal('surface_habitable', 8, 2);
+            $table->integer('nb_chambres')->default(0);
+            $table->integer('nb_salles_bain')->default(0);
+            $table->integer('nb_etages')->default(0);
+            $table->text('description')->nullable();
             $table->string('address');
             $table->boolean('is_active')->default(true);
             $table->boolean('en_vedette')->default(false);

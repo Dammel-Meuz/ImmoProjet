@@ -24,8 +24,8 @@ class ImageBienController extends Controller
    public function store(Request $request)
 {
     $validated = $request->validate([
-        'property_id' => 'required|exists:properties,id',
-        'image_path.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:5120', // max 5MB per file
+        'propertie_id' => 'required|exists:properties,id',
+        'image_path.*' => 'required|image|mimes:jpeg,png,jpg,gif', // max 5MB per file
     ]);
 
     $isMainRequested = $request->has('is_main');
@@ -47,7 +47,7 @@ foreach ($files as $index => $file) {
 
 
         \App\Models\ImageBien::create([
-            'property_id' => $request->property_id,
+            'propertie_id' => $request->propertie_id,
             'image_path' =>$imageName,
             'is_main' => $isMainRequested && $index === 0, // première image cochée principale
         ]);
