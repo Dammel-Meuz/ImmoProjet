@@ -24,20 +24,21 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
+        
         $validated = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
             'phone' => 'nullable|string',
             'type_demande' => 'required|in:vente,achat,location,estimation,autre',
             'message' => 'required|string',
-            'properties_id' => 'nullable|exists:properties,id',
             'status' => 'in:en_attente,traitee,cloturee',
-            'assigned_to' => 'nullable|exists:users,id',
+            
         ]);
+       
 
         Contact::create($validated);
 
-        return redirect()->route('contacts.index')->with('success', 'Contact créé avec succès.');
+        return redirect()->back()->with('success', 'message envoyé.');
     }
 
     public function show(Contact $contact)
@@ -54,19 +55,19 @@ class ContactController extends Controller
 
     public function update(Request $request, Contact $contact)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'phone' => 'nullable|string',
-            'type_demande' => 'required|in:vente,achat,location,estimation,autre',
-            'message' => 'required|string',
-            'properties_id' => 'nullable|exists:properties,id',
-            'status' => 'in:en_attente,traitee,cloturee',
-            'traitee_le' => 'nullable|date',
-            'assigned_to' => 'nullable|exists:users,id',
-        ]);
+        // $validated = $request->validate([
+        //     'name' => 'required|string',
+        //     'email' => 'required|email',
+        //     'phone' => 'nullable|string',
+        //     'type_demande' => 'required|in:vente,achat,location,estimation,autre',
+        //     'message' => 'required|string',
+        //     'properties_id' => 'nullable|exists:properties,id',
+        //     'status' => 'in:en_attente,traitee,cloturee',
+        //     'traitee_le' => 'nullable|date',
+        //     'assigned_to' => 'nullable|exists:users,id',
+        // ]);
 
-        $contact->update($validated);
+        $contact->update($request->all());
 
         return redirect()->route('contacts.index')->with('success', 'Contact mis à jour.');
     }

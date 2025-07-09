@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\PropertyView;
 use Illuminate\Http\Request;
+use App\Models\ProgramerVisite;
+use App\Models\Propertie;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -103,7 +106,19 @@ class AuthController extends Controller
         if (!$user) {
             return redirect()->route('client.login')->with('error', 'Veuillez vous connecter pour accéder au tableau de bord.');
         }
-
-        return view('client.dashboard', compact('user'));
+        $properties = Auth::user()->favoriteProperties()->get();
+        
+         $visites = ProgramerVisite::where('visitor_email', $user->email)
+                ->orderBy('visit_date', 'desc')
+                ->get();
+      
+        $userId = $user->id;
+        $propertiesviewed = Propertie::whereIn('id', function ($query) use ($userId) {
+            $query->select('property_id')
+                ->from('property_views')
+                ->where('user_id', $userId);
+        })->get();
+// dd($propertiesviewed);
+        return view('client.dashboard', compact('user', 'properties', 'visites', 'propertiesviewed'));
     }
 }

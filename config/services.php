@@ -30,5 +30,9 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'agent' => [
+    'key' => env('AGENT_KEY'),
+    'base_url' => 'https://api.mistral.ai/v1/chat/completions',
+],
 
 ];

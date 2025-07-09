@@ -2,9 +2,9 @@
 <html lang="fr"> 
 <head>
     @php
-    $isEdit = isset($typeProperty);
+    $isEdit = isset($property);
 @endphp
-    <title>{{ $isEdit ? 'Modifier' : 'Ajouter' }} un type de propriété</title>
+    <title>{{ $isEdit ? 'Modifier' : 'Ajouter' }}  de propriété</title>
     
     <!-- Meta -->
     <meta charset="utf-8">
@@ -182,7 +182,7 @@
                                     <i class="fas fa-arrow-left me-2"></i>Retour à la liste
                                 </a>
                                 @if($isEdit)
-                                    <a href="{{ route('properties.show', $typeProperty) }}" class="btn app-btn-info">
+                                    <a href="{{ route('properties.show', $property) }}" class="btn app-btn-info">
                                         <i class="fas fa-eye me-2"></i>Voir
                                     </a>
                                 @endif

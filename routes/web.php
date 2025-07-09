@@ -8,6 +8,7 @@ use App\Models\TypeProperty;
 use App\Models\ProgramerVisite;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CiteController;
 use App\Http\Controllers\AccueilController;
 use App\Http\Controllers\ContactController;
@@ -31,6 +32,9 @@ use App\Http\Controllers\ProgramerVisiteController;
 Route::get('/',[AccueilController::class,'index'])->name('accueil.index');
 Route::get('/biensList', [AccueilController::class, 'properties'])->name('accueil.biens');
 Route::get('/biens/{id}', [AccueilController::class, 'show'])->name('accueil.bien.show');
+
+Route::view('/chat', 'Accueil.chat')->name('accueil.chat');
+Route::post('/chatagent', [ChatController::class, 'chat'])->name('accueil.chat.post');
 
 
 // Route::get('/', function () {
@@ -59,25 +63,37 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         'agents' => User::where('role', 'agent')->count(),
         'typesActifs' => TypeProperty::where('is_active', true)->count(),
         'lastProperties' => Propertie::latest()->take(5)->get()
-    ]
-    );
-
-   
-
+    ]);
     })->name('dashboard.admin');
     Route::resource('type_properties', TypePropertyController::class);
     Route::resource('properties', PropertieController::class);
     Route::resource('images', ImageBienController::class);
 });
 
+Route::middleware(['auth', 'role:agent'])->group(function () {
+    Route::get('/agent/dashboard', function () {
+        return view('agent.dashboard12',
+        [
+        'disponibles' => Propertie::where('status', 'disponible')->count(),
+        'contactsEnAttente' => Contact::where('status', 'en_attente')->count(),
+        'lastContacts' => Contact::latest()->take(5)->get(),
+        'visitesAVenir' => ProgramerVisite::where('visit_date', '>', now())->count(),
+        'nextVisites' => ProgramerVisite::where('visit_date', '>', now())->orderBy('visit_date')->take(5)->get(),
+        'totalFavoris' => Favorite::count(),
+        'agents' => User::where('role', 'agent')->count(),
+        'typesActifs' => TypeProperty::where('is_active', true)->count(),
+        'lastProperties' => Propertie::latest()->take(5)->get()
+    ]);
+    })->name('dashboard.admin');
+});
 
-Route::resource('contacts', ContactController::class);
-Route::resource('programer_visites', ProgramerVisiteController::class);
+ Route::resource('contacts', ContactController::class);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/favoris', [FavoriteController::class, 'index'])->name('favorites.index');
     Route::delete('/favoris/{id}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
     Route::post('/favoris/{id}', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::resource('programer_visites', ProgramerVisiteController::class);
 });
 
 Route::post('/favorites/toggle', [FavoriteController::class, 'toggle'])->middleware('auth');
@@ -112,6 +128,8 @@ Route::prefix('client')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('client.logout');
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('client.dashboard')->middleware('auth');
 });
+
+Route::get('/ajax-search', [PropertieController::class, 'ajaxSearch'])->name('properties.ajax.search');
 
 
 require __DIR__.'/auth.php';

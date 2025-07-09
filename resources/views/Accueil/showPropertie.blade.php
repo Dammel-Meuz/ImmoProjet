@@ -18,7 +18,7 @@
         }
 
         /* Navigation */
-        .navbar {
+        /* .navbar {
             background: linear-gradient(135deg, var(--primary-color), #34495e);
             backdrop-filter: blur(10px);
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
@@ -40,8 +40,47 @@
         .nav-link:hover {
             color: white !important;
             transform: translateY(-2px);
+        } */
+.navbar {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+            left: 0;
+        }
         /* Breadcrumb */
         .breadcrumb-section {
             background: var(--background-light);
@@ -477,23 +516,7 @@
                             @else
                             <img id="main-image"  src="{{ asset('biens/' . $propriété->images[0]->image_path) }}" alt="Appartement moderne">
                         @endif
-                        {{-- <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop" alt="Appartement moderne - Vue principale"> --}}
-                        {{-- <div class="gallery-controls">
-                            <button class="gallery-btn" onclick="toggleFavorite()">
-                                <i class="far fa-heart" id="favoriteIcon"></i>
-                            </button>
-                            <button class="gallery-btn" onclick="shareProperty()">
-                                <i class="fas fa-share-alt"></i>
-                            </button>
-                            <button class="gallery-btn" onclick="openFullscreen()">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                        </div> --}}
-                        {{-- <div class="image-overlay">
-                            <div class="text-white">
-                                <p class="mb-0">1 / 8 photos</p>
-                            </div>
-                        </div> --}}
+                        
                     </div>
                     <div class="gallery-thumbnails">
                         @for ($i = 1; $i < count($propriété->images); $i++)
@@ -619,11 +642,14 @@
                         <!-- Contact Form -->
                         <div class="contact-form" id="contactForm" style="display: none;">
                             <h5 class="mb-3">Contactez l'agent</h5>
-                            <form>
-                                <input type="text" class="form-control" placeholder="Votre nom" required>
-                                <input type="email" class="form-control" placeholder="Votre email" required>
+                            <form action="{{route('programer_visites.store')}}" method="POST" class="form">
+                                @csrf
+                                <input type="text" name="property_id" value="{{ $propriété->id }}">
+                                <input type="text" name="agent_id" value="{{ $propriété->agent->id }}" >
                                 <input type="tel" class="form-control" placeholder="Votre téléphone">
-                                <textarea class="form-control" rows="4" placeholder="Votre message" required>Je suis intéressé(e) par ce bien. Pouvez-vous me contacter ?</textarea>
+                                <textarea class="form-control" rows="4" placeholder="Votre message" name="message" required>Je suis intéressé(e) par ce bien. Pouvez-vous me contacter ?</textarea>
+                                <input type="date" id="date" class="form-control" name="visit_date" required >
+                                <input type="time" id="heure" class="form-control" name="visit_time" required>
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="fas fa-paper-plane me-2"></i>
                                     Envoyer
@@ -656,6 +682,13 @@ function toggleContactForm() {
     const contactForm = document.getElementById('contactForm');
     contactForm.style.display = contactForm.style.display === 'none' ? 'block' : 'none';
 }
+
+
+flatpickr("#date", {
+    dateFormat: "Y-m-d",
+    locale: "fr"
+});
+
 </script>
 
 @endsection

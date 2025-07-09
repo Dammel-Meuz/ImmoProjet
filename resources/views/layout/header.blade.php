@@ -15,10 +15,23 @@
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
      <!-- FontAwesome JS-->
      <script defer src="{{asset('assets/plugins/fontawesome/js/all.min.js')}}"></script>
-     
+     {!! ToastMagic::styles() !!}
      <!-- App CSS -->  
      <link id="theme-style" rel="stylesheet" href="{{asset('/css/portal.css')}}">
   </head>
+  // Dans votre layout
+@if(session('toast'))
+<script>
+    Swal.fire({
+        icon: '{{ session('toast')['type'] }}',
+        title: '{{ session('toast')['message'] }}',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>
+@endif
     <div class="app-header-inner">  
         <div class="container-fluid py-2">
             <div class="app-header-content"> 
@@ -29,7 +42,7 @@
                         </a>
                         <a class="app-logo d-flex align-items-center" href="/dashboard">
                             {{-- <img class="logo-icon me-2" src="{{asset('assets/images/app-logo.svg')}}" alt="logo" style="height:32px;"> --}}
-                            <span class="logo-text fw-bold" style="color:#15a362;font-size:1.25rem;">Tawfekh-Immo Admin</span>
+                            <span class="logo-text fw-bold" style="color:#15a362;font-size:1.25rem;">Tawfekh-Immo  {{ ucfirst(Auth::user()->role) }}</span>
                         </a>
                     </div><!--//col-->
                     <div class="app-utilities col-auto d-flex align-items-center">
@@ -62,6 +75,7 @@
     <!--//app-sidepanel-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
      {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-+0n0xVW2eSR5O4v6j8z9f1b6d7rSb8dYH7z3P9g7kA" crossorigin="anonymous"></script> --}}
+   {!! ToastMagic::scripts() !!}
     </body>
 
 </html>

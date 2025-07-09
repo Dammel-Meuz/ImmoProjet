@@ -573,27 +573,7 @@
         <div class="container-xl">
             
             <!-- Breadcrumb Navigation -->
-            <div class="breadcrumb-nav">
-    <div class="container-xl">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item">
-                    <a href="">
-                        <i class="fas fa-home me-1"></i>Accueil
-                    </a>
-                </li>
-                <li class="breadcrumb-item">
-                    <a href="#">Communication</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    Gestion des Contacts
-                </li>
-            </ol>
-        </nav>
-    </div>
-</div>
-
-
+       
             <!-- Page Header -->
         
             <div class="page-header">
@@ -601,18 +581,11 @@
         <div>
             <h1 class="page-title">
                 <i class="fas fa-address-book text-primary me-2"></i>
-                Gestion des Contacts
+                Gestion des Messages
             </h1>
             <p class="page-subtitle">Consultez et traitez les demandes reçues via le site immobilier</p>
         </div>
-        {{-- <div class="quick-actions">
-            <button class="btn btn-outline-primary" onclick="exportContacts()">
-                <i class="fas fa-download me-2"></i>Exporter
-            </button>
-            <a href="{{ route('contacts.create') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Nouveau Contact
-            </a>
-        </div> --}}
+
     </div>
 </div>
 
@@ -708,45 +681,6 @@
 </div>
 
 
-            <!-- Filtres et Recherche -->
-            <div class="search-filters">
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <label for="searchInput" class="form-label">
-                            <i class="fas fa-search text-primary me-1"></i>Rechercher
-                        </label>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Nom de propriété, ID...">
-                    </div>
-                    <div class="filter-group">
-                        <label for="statusFilter" class="form-label">
-                            <i class="fas fa-filter text-primary me-1"></i>Type d'Image
-                        </label>
-                        <select id="statusFilter" class="form-select">
-                            <option value="">Tous les types</option>
-                            <option value="main">Images principales</option>
-                            <option value="secondary">Images secondaires</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="dateFilter" class="form-label">
-                            <i class="fas fa-calendar text-primary me-1"></i>Période
-                        </label>
-                        <select id="dateFilter" class="form-select">
-                            <option value="">Toutes les périodes</option>
-                            <option value="today">Aujourd'hui</option>
-                            <option value="week">Cette semaine</option>
-                            <option value="month">Ce mois</option>
-                            <option value="year">Cette année</option>
-                        </select>
-                    </div>
-                    <div class="filter-group">
-                        <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()">
-                            <i class="fas fa-undo me-2"></i>Réinitialiser
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Messages -->
             @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -815,15 +749,18 @@
                             <td class="cell">{{ $contact->phone ?? '—' }}</td>
                             <td class="cell"><span class="badge bg-info">{{ ucfirst($contact->type_demande) }}</span></td>
                             <td class="cell">{{ Str::limit($contact->message, 40) }}</td>
-                            <td class="cell">
-                                <span class="badge bg-@switch($contact->status)
-                                    @case('en_attente') warning @break
-                                    @case('traitee') success @break
-                                    @case('cloturee') secondary @break
-                                @endswitch">
-                                    {{ ucfirst(str_replace('_', ' ', $contact->status)) }}
-                                </span>
+                           <td class="cell">
+                                <form action="{{ route('contacts.update', $contact->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                        <option value="en_attente" {{ $contact->status === 'en_attente' ? 'selected' : '' }}>En attente</option>
+                                        <option value="traitee" {{ $contact->status === 'traitee' ? 'selected' : '' }}>Traité(e)</option>
+                                        <option value="cloturee" {{ $contact->status === 'cloturee' ? 'selected' : '' }}>Clôturé(e)</option>
+                                    </select>
+                                </form>
                             </td>
+
                             <td class="cell text-center">
                                 {{ $contact->created_at->format('d/m/Y H:i') }}
                             </td>
@@ -831,9 +768,9 @@
                                 <a class="btn app-btn-primary" href="{{ route('contacts.show', $contact) }}">
                                     <i class="fas fa-eye me-1"></i>
                                 </a>
-                                <a class="btn app-btn-secondary" href="{{ route('contacts.edit', $contact) }}">
+                                {{-- <a class="btn app-btn-secondary" href="{{ route('contacts.edit', $contact) }}">
                                     <i class="fas fa-edit me-1"></i>
-                                </a>
+                                </a> --}}
                                 <form action="{{ route('contacts.destroy', $contact) }}" method="POST" class="d-inline-block">
                                     @csrf
                                     @method('DELETE')

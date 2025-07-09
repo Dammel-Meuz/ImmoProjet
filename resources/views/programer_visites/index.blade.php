@@ -806,17 +806,23 @@
                             <td class="cell">{{ $visite->visitor_email }}</td>
                             <td class="cell">{{ $visite->visitor_phone }}</td>
                             <td class="cell">{{ $visite->property->title ?? '—' }}</td>
-                            <td class="cell">{{ $visite->visit_date->format('d/m/Y H:i') }}</td>
-                            <td class="cell">{{ $visite->agent->name ?? '—' }}</td>
                             <td class="cell">
-                                <span class="badge bg-@switch($visite->status)
-                                    @case('en_attente') warning @break
-                                    @case('confirmer') success @break
-                                    @case('completer') secondary @break
-                                    @case('rejetter') danger @break
-                                @endswitch">
-                                    {{ ucfirst(str_replace('_', ' ', $visite->status)) }}
-                                </span>
+                                <span>{{ date('d/m/Y', strtotime($visite->visit_date)) }}</span><br>
+                                <span>{{ date('H:i', strtotime($visite->visit_date)) }}</span>
+                            </td>
+                            <td class="cell">{{ $visite->agent->name ?? '—' }}</td>
+                         <td class="cell">
+                                <form method="POST" action="{{ route('programer_visites.update', $visite->id) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status" onchange="this.form.submit()" class="form-select form-select-sm">
+                                        @foreach(['en_attente', 'confirmer', 'completer', 'rejetter'] as $status)
+                                            <option value="{{ $status }}" {{ $visite->status === $status ? 'selected' : '' }}>
+                                                {{ ucfirst(str_replace('_', ' ', $status)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </form>
                             </td>
                             <td class="cell text-center">
                                 <a class="btn app-btn-primary" href="{{ route('programer_visites.show', $visite) }}">

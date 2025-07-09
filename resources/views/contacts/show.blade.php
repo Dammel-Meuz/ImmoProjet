@@ -428,10 +428,17 @@
                     <div class="info-icon success">
                         <i class="fas fa-calendar-check"></i>
                     </div>
+                    @if ($contact->status === 'traitee')
                     <div class="info-label">Traité le</div>
                     <div class="info-value">
-                        {{ $contact->traitee_le ? $contact->traitee_le->format('d/m/Y à H:i') : 'Non traité' }}
+                        {{ $contact->updated_at ? $contact->updated_at->format('d/m/Y à H:i') : 'Non traité' }}
+                            
                     </div>
+                    @else
+                    <div class="info-label">Traité le</div>
+                    <div class="info-value">Non traité</div>
+                    
+                    @endif
                 </div>
             </div>
 
@@ -454,10 +461,10 @@
                     <i class="fas fa-arrow-left"></i>
                     Retour à la liste
                 </a>
-                <a href="#" class="btn-modern btn-primary-modern">
+                {{-- <a href="#" class="btn-modern btn-primary-modern">
                     <i class="fas fa-edit"></i>
                     Modifier le contact
-                </a>
+                </a> --}}
             </div>
         </div>
     </div>

@@ -245,7 +245,7 @@
 
         .btn-view:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 5px 15px rgba(23, 105, 159, 0.3);
         }
 
         .btn-favorite {
@@ -370,7 +370,7 @@
                     <div class="mt-4">
                         <span class="badge bg-light text-dark me-2 p-2">
                             <i class="fas fa-home me-1"></i>
-                            <span id="totalProperties">47</span> Propriétés disponibles
+                            <span id="totalProperties">{{count($propriétés)}}</span> Propriétés disponibles
                         </span>
                     </div>
                 </div>
@@ -385,41 +385,48 @@
                 <i class="fas fa-search me-2 text-primary"></i>
                 Rechercher votre bien idéal
             </h3>
-            <form class="search-form">
+            <form class="search-form" id="" action="{{ route('properties.ajax.search') }}" method="GET">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <select class="form-select" id="propertyType">
+                       <select class="form-select" name="propertyType">
                             <option value="">Type de bien</option>
-                            <option value="appartement">Appartement</option>
-                            <option value="maison">Maison</option>
-                            <option value="villa">Villa</option>
-                            <option value="terrain">Terrain</option>
-                            <option value="bureau">Bureau</option>
+                           @foreach ($typePropriété as $type )
+                           <option value="{{ $type->id }}">{{ $type->name }}</option>
+                               
+                           @endforeach
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-select" id="transactionType">
+                        <select class="form-select" name="transactionType">
                             <option value="">Type de transaction</option>
                             <option value="vente">Vente</option>
                             <option value="location">Location</option>
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="location" placeholder="Localisation">
+                        <input type="text" class="form-control" name="location" placeholder="Localisation">
                     </div>
                     <div class="col-md-3">
-                        <select class="form-select" id="priceRange">
+                        <select class="form-select" id="priceRange" name="priceRange">
                             <option value="">Budget</option>
-                            <option value="0-100000">0 - 100 000 €</option>
-                            <option value="100000-300000">100 000 - 300 000 €</option>
-                            <option value="300000-500000">300 000 - 500 000 €</option>
-                            <option value="500000+">500 000 € +</option>
+                            <option value="0-100000">0 - 100 000 Fr</option>
+                            <option value="100000-300000">100 000 - 300 000 Fr</option>
+                            <option value="300000-500000">300 000 - 500 000 Fr</option>
+                            <option value="500000+">500 000 Fr +</option>
                         </select>
                     </div>
                 </div>
-                <div class="row g-3 mt-2">
-                    <div class="col-md-2">
-                        <select class="form-select" id="rooms">
+                <div class="row g-3 mt-2 align-items-center">
+                    {{-- <div class="col-md-2">
+                        <select class="form-select" name="propertyType">
+                            <option value="">Type de bien</option>
+                            <option value="appartement">Appartement</option>
+                            <option value="maison">Maison</option>
+                            <option value="villa">Villa</option>
+                            <option value="bureau">Bureau</option>
+                        </select>
+                    {{-- <div class="col-md-2">
+                        <select class="form-select" name="rooms">
                             <option value="">Pièces</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -427,9 +434,9 @@
                             <option value="4">4</option>
                             <option value="5+">5+</option>
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="col-md-2">
-                        <select class="form-select" id="bedrooms">
+                        <select class="form-select" name="bedrooms">
                             <option value="">Chambres</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -438,13 +445,13 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <input type="number" class="form-control" id="minSurface" placeholder="Surface min (m²)">
+                        <input type="number" class="form-control" name="minSurface" placeholder="Surface min (m²)">
                     </div>
                     <div class="col-md-3">
-                        <input type="number" class="form-control" id="maxSurface" placeholder="Surface max (m²)">
+                        <input type="number" class="form-control" name="maxSurface" placeholder="Surface max (m²)">
                     </div>
                     <div class="col-md-2">
-                        <button type="button" class="btn search-btn w-100">
+                        <button type="submit" class="btn search-btn w-100">
                             <i class="fas fa-search me-1"></i>
                             Rechercher
                         </button>
@@ -459,138 +466,150 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center">
                 <span class="me-3 fw-semibold">Filtres :</span>
-                <button class="btn filter-btn active filter-item" data-filter="all">Tous</button>
-                <button class="btn filter-btn filter-item" data-filter="vente">Vente</button>
-                <button class="btn filter-btn filter-item" data-filter="location">Location</button>
-                <button class="btn filter-btn filter-item" data-filter="recent">Récent</button>
-                <button class="btn filter-btn filter-item" data-filter="price-asc">Prix croissant</button>
-                <button class="btn filter-btn filter-item" data-filter="price-desc">Prix décroissant</button>
+                <form action="{{ route('properties.ajax.search') }}" method="GET">
+                    <button type="submit" class="btn filter-btn  filter-item {{ request('transactionType') === null ? 'active' : '' }}" data-filter="all">Tous</button>
+                </form>
+
+               <form action="{{ route('properties.ajax.search') }}" method="GET">
+                <input type="text" name="transactionType" value="vente" hidden>
+                <button type="submit" class="btn filter-btn filter-item {{ request('transactionType') === 'vente' ? 'active' : '' }}" data-filter="vente">Vente</button>
+                </form>
+
+                <form action="{{ route('properties.ajax.search') }}" method="GET">
+                <input type="text" name="transactionType" value="location" hidden>
+                <button type="submit" class="btn filter-btn filter-item {{ request('transactionType') === 'location' ? 'active' : '' }}" data-filter="location">Location</button>
+                </form>
+
+            
             </div>
         </div>
     </section>
 
     <!-- Properties Grid -->
     <section class="properties-section">
-        <div class="container">
-            <div class="row" id="propertiesGrid">
-                @foreach ($propriétés as $propriété )
-                    
-                
-                <div class="col-lg-4 col-md-6 property-item" data-type="vente" data-price="285000">
-                    <div class="property-card">
-                        <div class="property-image">
-                            @if ($propriété->images->isEmpty()) 
-                                <img src="{{ asset('img/default.png') }}" alt="Image" class="img-fluid">
-                            @else
-                            <img src="{{ asset('biens/' . $propriété->images[0]->image_path) }}" alt="Appartement moderne">
-                            @endif
-                            @if ($propriété->transaction_type == 'location')
-                            <div class="property-badge rent ">À Louer</div>
-                            @else
-                            
-                            <div class="property-badge sale">À Vendre</div>
-                            @endif
-                        </div>
-                        <div class="property-content">
-                            <div class="property-price2">{{ $propriété->prix }} Fr {{ $propriété->transaction_type == 'location' ? '/mois' : '' }}</div>
-                            <h4 class="property-title">{{ $propriété->title }}</h4>
-                            <div class="property-location">
-                                <i class="fas fa-map-marker-alt me-1"></i>
-                                {{ $propriété->address }}
-                            </div>
-                            <div class="property-features">
-                                @if ($propriété->nb_chambres)
-                                <div class="feature-item">
-                                    <i class="fas fa-bed"></i>
-                                    {{ $propriété->nb_chambres }} 
-                                </div>
-                                    
+    <div class="container">
+        <div id="searchResults" class="mt-4"></div>
+        <div class="row" id="propertiesGrid">
+            @if ($propriétés && $propriétés->count() > 0)
+                @foreach ($propriétés as $propriété)
+                    <div class="col-lg-4 col-md-6 property-item" data-type="vente" data-price="285000">
+                        <div class="property-card">
+                            <div class="property-image">
+                                @if ($propriété->images->isEmpty()) 
+                                    <img src="{{ asset('img/default.png') }}" alt="Image" class="img-fluid">
+                                @else
+                                    <img src="{{ asset('biens/' . $propriété->images[0]->image_path) }}" alt="Appartement moderne">
                                 @endif
-                                @if ($propriété->nb_salles_bain)
-                                <div class="feature-item">
-                                    <i class="fas fa-bath"></i>
-                                    {{ $propriété->nb_salles_bain }}
-                                </div>
-                               
+                                @if ($propriété->transaction_type == 'location')
+                                    <div class="property-badge rent">À Louer</div>
+                                @else
+                                    <div class="property-badge sale">À Vendre</div>
                                 @endif
-                                <div class="feature-item">
-                                    <i class="fas fa-ruler-combined"></i>
-                                    {{ $propriété->surface_habitable }} m²
-                                </div>
                             </div>
-                            <div class="property-actions">
-                                <a href="{{ route('accueil.bien.show', $propriété->id) }}" class="btn btn-view">
-                                    <i class="fas fa-eye me-1"></i>
-                                    Voir détails
-                                </a>
-                                <button class="btn btn-favorite" 
-                                        data-propertie-id="{{ $propriété->id }}" 
-                                        onclick="toggleFavorite(this)">
-                                    <i class="{{ auth()->check() && auth()->user()->favorites->contains('propertie_id', $propriété->id) ? 'fas' : 'far' }} fa-heart "></i>
-                                </button>
-                                {{-- <button class="btn btn-favorite" 
-                                    data-propertie-id="{{ $propriété->id }}" 
-                                    onclick="toggleFavorite(this)">
-                                <i class="{{ auth()->user()->favorites ? 'fas' : 'far' }} fa-heart"></i>
-                            </button> --}}
+                            <div class="property-content">
+                                <div class="property-price2">{{ $propriété->prix }} Fr {{ $propriété->transaction_type == 'location' ? '/mois' : '' }}</div>
+                                <h4 class="property-title">{{ $propriété->title }}</h4>
+                                <div class="property-location">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    {{ $propriété->address }}
+                                </div>
+                                <div class="property-features">
+                                    @if ($propriété->nb_chambres)
+                                        <div class="feature-item">
+                                            <i class="fas fa-bed"></i>
+                                            {{ $propriété->nb_chambres }} 
+                                        </div>
+                                    @endif
+                                    @if ($propriété->nb_salles_bain)
+                                        <div class="feature-item">
+                                            <i class="fas fa-bath"></i>
+                                            {{ $propriété->nb_salles_bain }}
+                                        </div>
+                                    @endif
+                                    <div class="feature-item">
+                                        <i class="fas fa-ruler-combined"></i>
+                                        {{ $propriété->surface_habitable }} m²
+                                    </div>
+                                </div>
+                                <div class="property-actions">
+                                    <a href="{{ route('accueil.bien.show', $propriété->id) }}" class="btn btn-view">
+                                        <i class="fas fa-eye me-1"></i>
+                                        Voir détails
+                                    </a>
+                                    <button class="btn btn-favorite" 
+                                            data-propertie-id="{{ $propriété->id }}" 
+                                            onclick="Favorite(this);">
+                                        <i class="{{ auth()->check() && auth()->user()->favorites->contains('propertie_id', $propriété->id) ? 'fas' : 'far' }} fa-heart"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 @endforeach
-
-            </div>
-            <!-- Pagination -->
-                <div class="pagination-section">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+            @else
+                <div class="col-12">
+                    <div class="no-properties-message text-center py-5">
+                        <i class="fas fa-home fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">Aucune propriété disponible</h4>
+                        <p class="text-muted">Il n'y a actuellement aucune propriété correspondant à vos critères.</p>
+                    </div>
                 </div>
+            @endif
         </div>
-    </section>  
+        
+        <!-- Pagination - Afficher seulement s'il y a des propriétés -->
+        @if ($propriétés && $propriétés->count() > 0)
+            <div class="pagination-section">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        @endif
+    </div>
+</section>
 
     <script>
 
-            function toggleFavorite(button) {
-                const propertieId = button.getAttribute('data-propertie-id');
+            // function toggleFavorite(button) {
+            //     const propertieId = button.getAttribute('data-propertie-id');
               
-                fetch('/favoris/' + propertieId, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        propertie_id: propertieId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const icon = button.querySelector('i');
-                        icon.classList.toggle('far');
-                        icon.classList.toggle('fas');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-                }
+            //     fetch('/favoris/' + propertieId, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            //         },
+            //         body: JSON.stringify({
+            //             propertie_id: propertieId
+            //         })
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.success) {
+            //             const icon = button.querySelector('i');
+            //             icon.classList.toggle('far');
+            //             icon.classList.toggle('fas');
+            //         }
+            //     })
+            //     .catch(error => console.error('Error:', error));
+            //     }
 
 
-                function toggleFavorite(button) {
+                function Favorite(button) {
     const propertieId = button.getAttribute('data-propertie-id');
     
     fetch('/favorites/toggle', {
@@ -617,7 +636,33 @@
     .catch(error => console.error('Error:', error));
 }
     // Dans la fonction toggleFavorite, après le changement de classe
-$(icon).animate({ scale: 1.2 }, 200).animate({ scale: 1 }, 200);
+// $(icon).animate({ scale: 1.2 }, 200).animate({ scale: 1 }, 200);
+
+
+
+
+
+    // $(document).ready(function () {
+    //     $('#searchForm').on('submit', function (e) {
+    //         e.preventDefault();
+
+    //         $.ajax({
+    //             url: "{{ route('properties.ajax.search') }}",
+    //             method: "GET",
+    //             data: $(this).serialize(),
+    //             beforeSend: function () {
+    //                 $('#searchResults').html('<p>Recherche en cours...</p>');
+    //             },
+    //             success: function (data) {
+    //                 $('#searchResults').html(data);
+    //             },
+    //             error: function () {
+    //                 $('#searchResults').html('<p>Une erreur est survenue.</p>');
+    //             }
+    //         });
+    //     });
+    // });
+
     </script>
 
     @endsection

@@ -247,6 +247,214 @@
                 grid-template-columns: 1fr;
             }
         }
+
+
+        .rdv-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .rdv-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rdv-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+
+        .rdv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .rdv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .rdv-type {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-visite {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .type-signature {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .type-estimation {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .rdv-date {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .rdv-property {
+            margin-bottom: 15px;
+        }
+
+        .property-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .property-address {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rdv-details {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .rdv-agent {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .rdv-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-confirme {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-attente {
+            background: #fef9e7;
+            color: #f39c12;
+        }
+
+        .status-reporte {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+
+
+
+
+
+
+
+
     </style>
 </head>
 <body>
@@ -254,7 +462,7 @@
         <!-- Menu latéral -->
         <div class="sidebar">
             <div class="logo">
-                <h2>🏠 ImmoClient</h2>
+                <h2>{{ Auth::user()->name }}</h2>
             </div>
             
             <nav>
@@ -262,10 +470,7 @@
                     <span>📊</span>
                     <span>Tableau de bord</span>
                 </div>
-                <div class="menu-item" onclick="showSection('properties')">
-                    <span>🏡</span>
-                    <span>Mes biens</span>
-                </div>
+                
                 <div class="menu-item" onclick="showSection('favorites')">
                     <span>❤️</span>
                     <span>Favoris</span>
@@ -278,10 +483,7 @@
                     <span>💬</span>
                     <span>Messages</span>
                 </div>
-                <div class="menu-item" onclick="showSection('documents')">
-                    <span>📄</span>
-                    <span>Documents</span>
-                </div>
+                
                 <div class="menu-item" onclick="showSection('profile')">
                     <span>👤</span>
                     <span>Profil</span>
@@ -305,17 +507,17 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="icon icon-blue">🏠</div>
-                        <h3>12</h3>
+                        <h3>{{count($propertiesviewed)}}</h3>
                         <p>Biens consultés</p>
                     </div>
                     <div class="stat-card">
                         <div class="icon icon-green">❤️</div>
-                        <h3>5</h3>
+                        <h3>{{count($properties)}}</h3>
                         <p>Biens favoris</p>
                     </div>
                     <div class="stat-card">
                         <div class="icon icon-orange">📅</div>
-                        <h3>3</h3>
+                        <h3>{{count($visites)}}</h3>
                         <p>Visites planifiées</p>
                     </div>
                     <div class="stat-card">
@@ -330,24 +532,35 @@
                         <h2 class="section-title">Biens récemment consultés</h2>
                         <button class="btn">Voir tout</button>
                     </div>
-                    
-                    <div class="property-card">
-                        <div class="property-image">🏠</div>
-                        <div class="property-info">
-                            <div class="property-title">Appartement T3 - Centre ville</div>
-                            <div class="property-details">75 m² • 2 chambres • 1 salle de bain</div>
-                            <div class="property-price">285 000 €</div>
+                    @if (isset($propertiesviewed))
+                    @foreach ($propertiesviewed as $viewed) 
+                    <a href="{{ route('accueil.bien.show', $viewed->id) }}"  style="text-decoration: none">
+                        <div class="property-card">
+                            <div class="property-image">
+                                 @if ($viewed->images->isEmpty()) 
+                                        <img src="{{ asset('img/default.png') }}" alt="Image" width="100%" height="100%" >
+                                    @else
+                                        <img src="{{ asset('biens/' . $viewed->images[0]->image_path) }}" alt="Appartement moderne" width="100%" height="100%">
+                                    @endif
+                            </div>
+                            <div class="property-info">
+                                <div class="property-title">{{$viewed->title}} - {{$viewed->address}}</div>
+                                <div class="property-details">{{$viewed->surface}} m² • {{$viewed->nb_chambres}} chambres • {{$viewed->nb_salles_bain}} salle de bain</div>
+                                <div class="property-price">{{$viewed->prix}} Fr</div>
+                            </div>
                         </div>
-                    </div>
                     
+                    </a>
+                        
+                    @endforeach
+                    
+                    @else
                     <div class="property-card">
-                        <div class="property-image">🏡</div>
-                        <div class="property-info">
-                            <div class="property-title">Maison avec jardin - Banlieue</div>
-                            <div class="property-details">120 m² • 4 chambres • 2 salles de bain</div>
-                            <div class="property-price">450 000 €</div>
-                        </div>
+                    <p>Vous n'avez pas encore consulté de biens.</p>
                     </div>
+                    @endif
+                    
+                   {{-- petit poid mayonnaise et oeuf dure  --}}
                 </div>
             </div>
 
@@ -370,14 +583,31 @@
                     <p>Retrouvez tous vos biens préférés</p>
                 </div>
                 <div class="properties-section">
-                    <div class="property-card">
-                        <div class="property-image">🏠</div>
-                        <div class="property-info">
-                            <div class="property-title">Appartement T3 - Centre ville</div>
-                            <div class="property-details">75 m² • 2 chambres • 1 salle de bain</div>
-                            <div class="property-price">285 000 €</div>
+                    @if (isset($properties))
+                    @foreach ($properties as $property)
+                    <a href="{{ route('accueil.bien.show', $property->id) }}"  style="text-decoration: none">
+                        <div class="property-card">
+                            <div class="property-image">
+                                 @if ($property->images->isEmpty()) 
+                                        <img src="{{ asset('img/default.png') }}" alt="Image" width="100%" height="100%" >
+                                    @else
+                                        <img src="{{ asset('biens/' . $property->images[0]->image_path) }}" alt="Appartement moderne" width="100%" height="100%">
+                                    @endif
+                            </div>
+                            <div class="property-info">
+                                <div class="property-title">{{$property->title}} - {{$property->address}}</div>
+                                <div class="property-details">{{$property->surface}} m² • {{$property->nb_chambres}} chambres • {{$property->nb_salles_bain}} salle de bain</div>
+                                <div class="property-price">{{$property->prix}} Fr</div>
+                            </div>
                         </div>
-                    </div>
+                    
+                    </a>
+                        
+                    @endforeach
+                        
+                    @else
+                    <p>Aucun favori pour le moment.</p>
+                    @endif
                 </div>
             </div>
 
@@ -387,9 +617,52 @@
                     <h1>Mes rendez-vous</h1>
                     <p>Planifiez et suivez vos visites</p>
                 </div>
-                <div class="properties-section">
-                    <p>Aucun rendez-vous planifié pour le moment.</p>
-                    <button class="btn">Planifier une visite</button>
+                <div class="rdv-grid">
+                    @if (isset($visites))
+                        @foreach ($visites as $visite)
+                            
+                       
+                    
+                   <div class="rdv-card" data-type="visite">
+                <div class="rdv-header">
+                    <div class="rdv-type type-visite">Visite</div>
+                    <div class="status-badge status-confirme">
+                        {{ $visite->status }}
+                    </div>
+                </div>
+                
+                <div class="rdv-date">
+                    🗓️ Mardi 8 Juillet 2025 à 14h30
+                </div>
+                
+                <div class="rdv-property">
+                    <div class="property-title">Appartement 3 pièces - 75m²</div>
+                    <div class="property-address">📍 15 Rue de la Paix, 75001 Paris</div>
+                </div>
+                
+                <div class="rdv-details">
+                    <div class="detail-item">💰 420 000 €</div>
+                    <div class="detail-item">⏱️ 1h</div>
+                    <div class="detail-item">🏢 2ème étage</div>
+                </div>
+                
+                <div class="rdv-agent">
+                    <div class="agent-avatar">JM</div>
+                    <div>
+                        <strong>Jean Martin</strong><br>
+                        <span style="color: #7f8c8d;">📞 06 12 34 56 78</span>
+                    </div>
+                </div>
+                
+                <div class="rdv-actions">
+                    <button class="btn btn-primary">Modifier</button>
+                    <button class="btn btn-secondary">Annuler</button>
+                </div>
+            </div>
+             @endforeach
+                    @else
+                    <p>Aucun rendez-vous pour le moment.</p>
+                    @endif
                 </div>
             </div>
 
